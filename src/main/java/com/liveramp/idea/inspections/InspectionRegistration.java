@@ -1,4 +1,4 @@
-package su.nlq.idea.inspections;
+package com.liveramp.idea.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.openapi.components.ApplicationComponent;
@@ -29,10 +29,7 @@ public final class InspectionRegistration implements ApplicationComponent, Inspe
   @NotNull
   public Class<?>[] getInspectionClasses() {
     return new Class<?>[]{
-        NotNullInspection.class,
-        FinalOrAbstractClassInspection.class,
-        StaticSyncInspection.class,
-        PublicOrStringSyncInspection.class
+      MemberVariableInLambda.class
     };
   }
 }
