@@ -15,3 +15,32 @@ intellij {
   updateSinceUntilBuild false
 }
 
+import org.apache.tools.ant.filters.ReplaceTokens
+
+// Change compiler source directory
+sourceSets {
+  main {
+    resources {
+      srcDirs = ['build/src/main/resources']
+    }
+  }
+}
+
+// Prepare sources for compilation
+task prepareResources(type: Copy) {
+  from('src/main/resources')
+  into('build/src/main/resources')
+  filter(ReplaceTokens, tokens: [pluginVersion: version])
+}
+
+task prepareRepoVersion(type: Copy) {
+  from('plugins.xml')
+  into('build')
+  filter(ReplaceTokens, tokens: [pluginVersion: version])
+}
+
+// Prepare sources, before compile
+compileJava {
+  dependsOn prepareResources
+  dependsOn prepareRepoVersion
+}

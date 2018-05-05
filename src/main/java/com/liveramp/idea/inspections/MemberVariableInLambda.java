@@ -15,6 +15,7 @@ import com.intellij.psi.JavaTokenType;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiEnumConstant;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiLambdaExpression;
@@ -108,7 +109,7 @@ public class MemberVariableInLambda extends AbstractBaseJavaLocalInspectionTool 
       super.visitReferenceExpression(expression);
       LOG.error("Visiting "+expression);
       PsiElement resolved = expression.resolve();
-      if (resolved instanceof PsiField) {
+      if (resolved instanceof PsiField && !(resolved instanceof PsiEnumConstant)) {
         SmartPointerManager manager = SmartPointerManager.getInstance(expression.getProject());
 
         ProblemDescriptor problemDescriptor =
