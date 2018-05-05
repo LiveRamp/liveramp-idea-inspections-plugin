@@ -3,7 +3,7 @@
 	<ff>"Inspection"</ff>
 	<category name="Inspection">
 		<idea-plugin url='https://git.liveramp.net/MasterRepos/liveramp-idea-inspections-plugin'>
-			<download-url>https://git.liveramp.net/MasterRepos/liveramp-idea-inspections-plugin/releases/download/v0.1/liveramp-idea-inspections-plugin-0.1.jar</download-url>
+			<download-url>http://library.liveramp.net/artifactory/ext-release-local/com/liveramp/liveramp-idea-inspections-plugin/liveramp-idea-inspections-plugin-0.1.jar</download-url>
 			<id>LiverampExtraJavaInspections</id>
 			<name>Liveramp Extra Java Inspections</name>
 			<version>0.1</version>
