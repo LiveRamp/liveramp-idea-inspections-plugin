@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>LiverampExtraJavaInspections</id>
   <name>Liveramp Extra Java Inspections</name>
-  <version>0.1</version>
+  <version>0.2</version>
   <description>Some extra Java inspections.</description>
   <idea-version since-build="139.0" />
   <depends>com.intellij.modules.java</depends>
