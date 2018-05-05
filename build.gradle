@@ -7,7 +7,7 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'idea'
 
 group 'com.liveramp'
-version '0.3'
+version '0.4'
 
 sourceCompatibility = 1.8
 

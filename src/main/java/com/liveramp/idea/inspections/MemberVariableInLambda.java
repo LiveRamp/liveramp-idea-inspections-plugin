@@ -107,7 +107,6 @@ public class MemberVariableInLambda extends AbstractBaseJavaLocalInspectionTool 
     @Override
     public void visitReferenceExpression(PsiReferenceExpression expression) {
       super.visitReferenceExpression(expression);
-      LOG.error("Visiting "+expression);
       PsiElement resolved = expression.resolve();
       if (resolved instanceof PsiField && !(resolved instanceof PsiEnumConstant)) {
         SmartPointerManager manager = SmartPointerManager.getInstance(expression.getProject());
