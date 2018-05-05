@@ -1,6 +1,8 @@
 package com.liveramp.idea.inspections;
 
 import java.io.Serializable;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.intellij.codeInsight.daemon.GroupNames;
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
@@ -12,20 +14,26 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.JavaRecursiveElementVisitor;
 import com.intellij.psi.JavaTokenType;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiDeclarationStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiEnumConstant;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiLambdaExpression;
+import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiMember;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiReferenceExpression;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.filters.position.ParentElementFilter;
 import com.intellij.psi.impl.java.stubs.JavaClassElementType;
 import com.intellij.psi.impl.java.stubs.JavaFieldStubElementType;
+import com.intellij.psi.impl.source.tree.java.PsiReferenceExpressionImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -85,7 +93,6 @@ public class MemberVariableInLambda extends AbstractBaseJavaLocalInspectionTool 
           SmartPsiElementPointer<PsiLambdaExpression> lambdaExpression = manager.createSmartPsiElementPointer(expression);
 
 
-
           expression.acceptChildren(new FindMemberVar(holder, lambdaExpression, onTheFly));
         }
       }
@@ -108,18 +115,50 @@ public class MemberVariableInLambda extends AbstractBaseJavaLocalInspectionTool 
     public void visitReferenceExpression(PsiReferenceExpression expression) {
       super.visitReferenceExpression(expression);
       PsiElement resolved = expression.resolve();
-      if (resolved instanceof PsiField && !(resolved instanceof PsiEnumConstant)) {
-        SmartPointerManager manager = SmartPointerManager.getInstance(expression.getProject());
+      if (resolved != null &&
+          resolved instanceof PsiField &&
+          !((PsiField)resolved).getModifierList().hasModifierProperty(PsiModifier.STATIC)) {
 
-        ProblemDescriptor problemDescriptor =
-            holder.getManager().createProblemDescriptor(
-                expression, getDisplayName(),
-                new FixMemberVarInLambda(lambdaExpression,
-                    manager.createSmartPsiElementPointer((PsiField)resolved),
-                    manager.createSmartPsiElementPointer(expression)), ProblemHighlightType.GENERIC_ERROR, onTheFly);
+        if (!isFieldMemberOfLocalLambdaVar(expression)) {
+          SmartPointerManager manager = SmartPointerManager.getInstance(expression.getProject());
 
-        holder.registerProblem(problemDescriptor);
+          ProblemDescriptor problemDescriptor =
+              holder.getManager().createProblemDescriptor(
+                  expression, getDisplayName(),
+                  new FixMemberVarInLambda(lambdaExpression,
+                      manager.createSmartPsiElementPointer((PsiField)resolved),
+                      manager.createSmartPsiElementPointer(expression)), ProblemHighlightType.GENERIC_ERROR, onTheFly);
+
+          holder.registerProblem(problemDescriptor);
+        }
       }
+    }
+
+    private boolean isFieldMemberOfLocalLambdaVar(PsiReferenceExpression expression) {
+      if (expression.getQualifierExpression() != null &&
+          expression.getQualifierExpression() instanceof PsiReferenceExpression) {
+        PsiReferenceExpression refExp = (PsiReferenceExpression)expression.getQualifierExpression();
+        PsiElement resolvedReference = refExp.resolve();
+        if (resolvedReference instanceof PsiLocalVariable) {
+          PsiLocalVariable localVar = (PsiLocalVariable)resolvedReference;
+          AtomicBoolean varIsLocalToLambda = new AtomicBoolean(false);
+          JavaRecursiveElementVisitor localityChecker = new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitDeclarationStatement(PsiDeclarationStatement statement) {
+              super.visitDeclarationStatement(statement);
+              for (PsiElement psiElement : statement.getDeclaredElements()) {
+                if (psiElement.isEquivalentTo(localVar)) {
+                  varIsLocalToLambda.set(true);
+                  return;
+                }
+              }
+            }
+          };
+          lambdaExpression.getElement().accept(localityChecker);
+          return varIsLocalToLambda.get();
+        }
+      }
+      return false;
     }
   }
 }

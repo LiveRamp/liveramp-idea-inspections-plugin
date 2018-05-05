@@ -42,10 +42,13 @@ public class FixMemberVarInLambda implements LocalQuickFix {
 
   @Override
   public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-
     PsiElementFactory factory = JavaPsiFacade.getElementFactory(project);
 
-    String prefix = field.getElement().getContainingFile().equals(fieldUseSite.getElement().getContainingFile()) ? "this." : "";
+    PsiReferenceExpression fieldUseSiteElement = fieldUseSite.getElement();
+
+    String prefix = fieldUseSiteElement.getQualifierExpression() == null ?
+        "this." :
+        fieldUseSiteElement.getQualifierExpression().getText()+".";
 
     String fieldName = field.getElement().getName();
 
@@ -64,6 +67,6 @@ public class FixMemberVarInLambda implements LocalQuickFix {
     }
     parent.addBefore(newLocalFinalVariable, anchor);
 
-    fieldUseSite.getElement().bindToElement(newVariable);
+    fieldUseSiteElement.replace(factory.createExpressionFromText(fieldName, null));
   }
 }
