@@ -6,7 +6,7 @@
 
 ### To Add Inspections ###
 
-Follow the example set out by `MemberVariableInLambda`, and remember to register your inspection in the `InspectionRegistration` class. To test locally, use `gradle build` to create the plugin zip in `build/distributions/` and install the plugin from disk in Intellij. When you are ready to publish, increment the version number of the plugin in build.grade, plugins.zml, and src/main/resources/META-INF/plugin.xml
+Follow the example set out by `MemberVariableInLambda`, and remember to register your inspection in the `InspectionRegistration` class. To test locally, use `gradle build` to create the plugin zip in `build/distributions/` and install the plugin from disk in Intellij. When you are ready to publish, increment the version number of the plugin in build.gradle, and you're all set!
 
 ### Plugin Repository ###
 
