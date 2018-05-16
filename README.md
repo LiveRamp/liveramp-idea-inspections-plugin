@@ -1,5 +1,7 @@
 # Extra Java Inspections IntelliJ IDEA plugin #
 
+[![Build Status](https://travis-ci.com/LiveRamp/liveramp-idea-inspections-plugin.svg?branch=master)](https://travis-ci.com/LiveRamp/liveramp-idea-inspections-plugin)
+
 ### Inspections List ###
 
 * Find instances of object fields being used in serializable lambdas - this will break serializability of the lambda. Provides a quick fix to alias the variable as local and final.
