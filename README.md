@@ -10,4 +10,4 @@ Follow the example set out by `MemberVariableInLambda`, and remember to register
 
 ### Plugin Repository ###
 
-To be able to download and update the plugin in regular IntelliJ IDEA way, please, follow "[Managing Enterprise Plugin Repositories](https://www.jetbrains.com/help/idea/managing-enterprise-plugin-repositories.html)" steps using link to `http://library.liveramp.net/artifactory/ext-release-local/com/liveramp/liveramp-idea-inspections-plugin/plugins.xml` as repository URL.
+To be able to download and update the plugin in regular IntelliJ IDEA way, please, follow "[Managing Enterprise Plugin Repositories](https://www.jetbrains.com/help/idea/managing-enterprise-plugin-repositories.html)" steps using link to `http://repository.liveramp.com/artifactory/ext-release-local/com/liveramp/liveramp-idea-inspections-plugin/plugins.xml` as repository URL.
