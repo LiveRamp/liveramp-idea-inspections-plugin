@@ -1,0 +1,11 @@
+# BEGIN TERRAFORM MANAGED BLOCK
+"apiVersion": "backstage.io/v1alpha1"
+"kind": "Location"
+"metadata":
+  "annotations":
+    "github.com/project-slug": "LiveRamp/liveramp-idea-inspections-plugin"
+  "description": "Intellij IDEA plugin with some additional inspections"
+  "name": "liveramp-idea-inspections-plugin"
+  "tags": []
+"spec": {}
+# END TERRAFORM MANAGED BLOCK
